@@ -1,6 +1,6 @@
 package com.ada.repository;
 
-import com.ada.model.Cliente;
+import com.ada.domain.entity.Cliente;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 

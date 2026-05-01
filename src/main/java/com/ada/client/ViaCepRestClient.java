@@ -1,6 +1,6 @@
 package com.ada.client;
 
-import com.ada.dto.ViaCepResponse;
+import com.ada.dto.response.ViaCepResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;

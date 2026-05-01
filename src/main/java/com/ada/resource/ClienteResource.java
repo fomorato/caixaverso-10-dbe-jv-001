@@ -1,7 +1,7 @@
 package com.ada.resource;
 
-import com.ada.dto.ClienteRequest;
-import com.ada.dto.ClienteResponse;
+import com.ada.dto.request.ClienteRequest;
+import com.ada.dto.response.ClienteResponse;
 import com.ada.service.ClienteService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -22,7 +22,6 @@ public class ClienteResource {
         this.service = service;
     }
 
-    // POST /clientes
     @POST
     public Response criar(@Valid ClienteRequest req) {
         var cliente = service.criar(req);
@@ -31,34 +30,29 @@ public class ClienteResource {
                 .build();
     }
 
-    // GET /clientes
     @GET
     public List<ClienteResponse> listar() {
         return service.listar().stream().map(ClienteResponse::from).toList();
     }
 
-    // GET /clientes/{id}
     @GET
     @Path("/{id}")
     public ClienteResponse buscarPorId(@PathParam("id") UUID id) {
         return ClienteResponse.from(service.buscarPorId(id));
     }
 
-    // GET /clientes/documento/{doc}
     @GET
     @Path("/documento/{doc}")
     public ClienteResponse buscarPorDocumento(@PathParam("doc") String doc) {
         return ClienteResponse.from(service.buscarPorDocumento(doc));
     }
 
-    // PUT /clientes/{id}
     @PUT
     @Path("/{id}")
     public ClienteResponse atualizar(@PathParam("id") UUID id, @Valid ClienteRequest req) {
         return ClienteResponse.from(service.atualizar(id, req));
     }
 
-    // DELETE /clientes/{id}
     @DELETE
     @Path("/{id}")
     public Response remover(@PathParam("id") UUID id) {

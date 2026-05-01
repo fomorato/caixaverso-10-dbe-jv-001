@@ -1,4 +1,4 @@
-package com.ada.dto;
+package com.ada.dto.response;
 
 import lombok.Data;
 

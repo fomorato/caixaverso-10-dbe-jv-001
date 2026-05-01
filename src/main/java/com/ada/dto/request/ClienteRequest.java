@@ -1,4 +1,4 @@
-package com.ada.dto;
+package com.ada.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,7 +11,6 @@ public class ClienteRequest {
     @NotBlank
     public String documento;
 
-    // Aceita "01001000" ou "01001-000"
     @NotBlank
     @Pattern(
             regexp = "\\d{5}-?\\d{3}",
@@ -19,10 +18,8 @@ public class ClienteRequest {
     )
     public String cep;
 
-    // Não retornado pelo ViaCEP -> obrigatório para completar o endereço
     @NotBlank
     public String numero;
 
-    // Opcional e sempre vem do usuário (NÃO usar o valor do ViaCEP)
     public String complemento;
 }

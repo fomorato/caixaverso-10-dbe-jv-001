@@ -1,10 +1,10 @@
 package com.ada.service;
 
 import com.ada.client.ViaCepRestClient;
-import com.ada.dto.ClienteRequest;
-import com.ada.dto.ViaCepResponse;
-import com.ada.model.Cliente;
-import com.ada.model.Endereco;
+import com.ada.dto.request.ClienteRequest;
+import com.ada.dto.response.ViaCepResponse;
+import com.ada.domain.entity.Cliente;
+import com.ada.domain.entity.Endereco;
 import com.ada.repository.ClienteRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -30,15 +30,12 @@ public class ClienteService {
     @Transactional
     public Cliente criar(ClienteRequest req) {
 
-        // Regra: documento único
         if (clienteRepository.findByDocumento(req.documento).isPresent()) {
             throw new WebApplicationException("Documento já cadastrado.", Response.Status.CONFLICT);
         }
 
-        // Normaliza CEP: aceita "01001-000" e "01001000"
         String cep = normalizeCep(req.cep);
 
-        // Consulta ViaCEP
         ViaCepResponse via;
         try {
             via = cepRestClient.getByCep(cep);
@@ -50,8 +47,6 @@ public class ClienteService {
             throw new WebApplicationException("CEP inválido ou não encontrado.", Response.Status.BAD_REQUEST);
         }
 
-
-        // complemento sempre do usuário; se vier em branco, salva null
         String complementoUsuario = (req.complemento != null && !req.complemento.isBlank())
             ? req.complemento
             : null;
@@ -64,7 +59,6 @@ public class ClienteService {
             .complemento(complementoUsuario) // <-- NUNCA via.getComplemento()
             .build();
 
-        // Monta cliente
         Cliente c = new Cliente();
         c.setNome(req.nome);
         c.setDocumento(req.documento);
@@ -92,7 +86,6 @@ public class ClienteService {
     public Cliente atualizar(UUID id, ClienteRequest req) {
         Cliente c = buscarPorId(id);
 
-        // Se mudar documento, valida unicidade
         clienteRepository.findByDocumento(req.documento).ifPresent(outro -> {
             if (!outro.getId().equals(c.getId())) {
                 throw new WebApplicationException("Documento já cadastrado.", Response.Status.CONFLICT);
@@ -102,7 +95,6 @@ public class ClienteService {
         c.setNome(req.nome);
         c.setDocumento(req.documento);
 
-        // Atualiza endereço com base no CEP informado
         String cep = normalizeCep(req.cep);
 
         ViaCepResponse via;
@@ -116,7 +108,6 @@ public class ClienteService {
             throw new WebApplicationException("CEP inválido ou não encontrado.", Response.Status.BAD_REQUEST);
         }
 
-
         String complementoUsuario = (req.complemento != null && !req.complemento.isBlank())
             ? req.complemento
             : null;
@@ -126,7 +117,7 @@ public class ClienteService {
             .logradouro(via.getLogradouro())
             .bairro(via.getBairro())
             .numero(req.numero)
-            .complemento(complementoUsuario) // <-- NUNCA via.getComplemento()
+            .complemento(complementoUsuario)
             .build();
 
         c.setEndereco(endereco);

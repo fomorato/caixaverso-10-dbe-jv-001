@@ -1,6 +1,6 @@
-package com.ada.dto;
+package com.ada.dto.response;
 
-import com.ada.model.Endereco;
+import com.ada.domain.entity.Endereco;
 import lombok.Builder;
 
 @Builder

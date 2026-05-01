@@ -1,6 +1,6 @@
-package com.ada.dto;
+package com.ada.dto.response;
 
-import com.ada.model.Cliente;
+import com.ada.domain.entity.Cliente;
 import lombok.Builder;
 
 import java.util.UUID;
